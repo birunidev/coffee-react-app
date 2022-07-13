@@ -1,0 +1,98 @@
+/auth/login:
+  post:
+    tags:
+      - Auth
+    description: Login
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                example: "birunidev@gmail.com"
+              password:
+                type: string
+                example: "12345678"
+    produces:
+      - application/json
+    responses:
+      "200":
+        description: Login response
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                access_token:
+                  type: string
+                  example: "eyJhbGciOiJSUzI1NiJ9.eyJkYXRhIjp7InVzZXJJZCI6MTMsInVzZXIiOnsibmFtZSI6IkFsIEJpcnVuaSIsImVtYWlsIjoic2JpcnVuaWRldnNzc3Nzc3Nzc3Nzc0BnbWFpbC5jb20ifX0sImlhdCI6MTY1NjA2MDgwMSwiZXhwIjoxNjU2MDYxNDAxfQ.tTbqE1yrV5owW0sqfoDXY7g1_wkal4T-VPOaNnkI8KTKkCEvZAQuKu1wITPsyx5Op8rOZvb-Ijq8jw4i9HPqottYmko59TLWPfXu8-xEmIWpqNnBiHWyIGUdCIOaXFDazAHAk9-L0VcnkP0uNNxlqJM_CYSfr3GavJIC8vkQjsxVIjnO6gw-i0pwJLHwsbydNi6BugtjnzfB503dspd7zGNh4qaa2TbcfGQbiG1wvYb0AkC5DBWqvf6fhUOWffS5rceKPWYAySCWSobi4rhyz4kmzrLicOe51F9vLfzQsDJEExSZGGrFJpBRSD0ScG2Cz4A-gQgV1mkOFEKEppIIHJjFzIUtUjb4WPJXEWKRZza1Wsvl9F43MY-jWVYcCRcejhTuB51xQ_9EJQnQSmZLTZJuqy0IZCmYvKkRnAnrkHuUVdG1J5Q0jis_JDv4zW25CWdXqbLP3hXC7ziVbVr6VB_YcqgPpytES9Hp5QqQzBd8w9KBu5-NgabeFwj2IX9NVgzmRo-gk1XBE82qQTMzTtbBImQxzPLkUUCaTLF_BVL2_x5uXt7L9opNmxHw1DCGXFhRJGxWrv9_MbdXwXYtPRFaFu3ZSikMfkkj1qPaQkB0ZC4h4RQP4O_VZE6QVTWvSI2R4LNGePgrvu1lPFm0o6BquMQthrwd9FN8SFSYZU0"
+                statusCode:
+                  type: number
+                  example: 200
+                success:
+                  type: boolean
+                  example: true
+
+/auth/register:
+  post:
+    tags:
+      - Auth
+    description: Login
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: "Albi"
+              username:
+                type: string
+                example: "albi"
+              email:
+                type: string
+                example: "birunidev@gmail.com"
+              password:
+                type: string
+                example: "12345678"
+    produces:
+      - application/json
+    responses:
+      "200":
+        description: Register response
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                access_token:
+                  type: string
+                  example: "eyJhbGciOiJSUzI1NiJ9.eyJkYXRhIjp7InVzZXJJZCI6MTMsInVzZXIiOnsibmFtZSI6IkFsIEJpcnVuaSIsImVtYWlsIjoic2JpcnVuaWRldnNzc3Nzc3Nzc3Nzc0BnbWFpbC5jb20ifX0sImlhdCI6MTY1NjA2MDgwMSwiZXhwIjoxNjU2MDYxNDAxfQ.tTbqE1yrV5owW0sqfoDXY7g1_wkal4T-VPOaNnkI8KTKkCEvZAQuKu1wITPsyx5Op8rOZvb-Ijq8jw4i9HPqottYmko59TLWPfXu8-xEmIWpqNnBiHWyIGUdCIOaXFDazAHAk9-L0VcnkP0uNNxlqJM_CYSfr3GavJIC8vkQjsxVIjnO6gw-i0pwJLHwsbydNi6BugtjnzfB503dspd7zGNh4qaa2TbcfGQbiG1wvYb0AkC5DBWqvf6fhUOWffS5rceKPWYAySCWSobi4rhyz4kmzrLicOe51F9vLfzQsDJEExSZGGrFJpBRSD0ScG2Cz4A-gQgV1mkOFEKEppIIHJjFzIUtUjb4WPJXEWKRZza1Wsvl9F43MY-jWVYcCRcejhTuB51xQ_9EJQnQSmZLTZJuqy0IZCmYvKkRnAnrkHuUVdG1J5Q0jis_JDv4zW25CWdXqbLP3hXC7ziVbVr6VB_YcqgPpytES9Hp5QqQzBd8w9KBu5-NgabeFwj2IX9NVgzmRo-gk1XBE82qQTMzTtbBImQxzPLkUUCaTLF_BVL2_x5uXt7L9opNmxHw1DCGXFhRJGxWrv9_MbdXwXYtPRFaFu3ZSikMfkkj1qPaQkB0ZC4h4RQP4O_VZE6QVTWvSI2R4LNGePgrvu1lPFm0o6BquMQthrwd9FN8SFSYZU0"
+                statusCode:
+                  type: number
+                  example: 200
+                success:
+                  type: boolean
+                  example: true
+                data:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    email:
+                      type: string
+                    password:
+                      type: string
+                    username:
+                      type: string
+                    role:
+                      type: string
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+                    id:
+                      type: string
