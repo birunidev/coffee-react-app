@@ -2,30 +2,43 @@ import { Gap, ImagePicker, InputField, Select } from "components";
 import { useFormik } from "formik";
 import { DashboardLayout, PageTitle } from "modules/Dashboard/components";
 import { categoryAPI, productAPI } from "modules/Dashboard/infrastructure/api";
-import { CreateMenu } from "modules/Dashboard/infrastructure/schemes";
-import React from "react";
-import { useEffect } from "react";
-import { useRef } from "react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import slugify from "slugify";
-import { createProduct } from "store/slice/productSlice";
+import { updateProduct } from "store/slice/productSlice";
 
-export default function Create() {
+export default function Edit() {
+  const { id } = useParams();
   const dispatch = useDispatch();
   const [mediaUrl, setMediaUrl] = useState("");
   const [categories, setCategories] = useState([]);
 
-  const createMenuBtn = useRef();
+  const [product, setProduct] = useState({
+    title_product: "",
+    code_product: "",
+    price: "",
+    sale_price: "",
+    category_id: categories.length > 0 ? categories[0].id : 1,
+  });
+
+  const updateMenuBtn = useRef();
+
+  useEffect(() => {
+    productAPI.getSingle(id).then((res) => {
+      setProduct(res.data);
+      setMediaUrl(res.data.thumbnail);
+    });
+  }, [id]);
 
   const formik = useFormik({
     initialValues: {
-      title_product: "",
-      code_product: "",
-      price: "",
-      sale_price: "",
-      category_id: categories.length > 0 ? categories[0].id : 1,
+      title_product: product?.title_product ?? "",
+      code_product: product?.code_product ?? "",
+      price: product?.price ?? 0,
+      sale_price: product?.sale_price,
+      category_id: product.category_id,
     },
     onSubmit: (values) => {
       let data = {
@@ -35,14 +48,14 @@ export default function Create() {
         category_id: parseInt(values.category_id),
       };
       dispatch(
-        createProduct({
+        updateProduct({
+          id: id,
           formData: data,
           toast,
         })
       );
     },
     enableReinitialize: true,
-    validationSchema: CreateMenu,
   });
 
   useEffect(() => {
@@ -52,13 +65,13 @@ export default function Create() {
   }, []);
 
   const buttonHandler = () => {
-    createMenuBtn.current.click();
+    updateMenuBtn.current.click();
   };
   return (
     <DashboardLayout setMediaUrl={setMediaUrl} activePage="Menu">
       <PageTitle
         buttonHandler={buttonHandler}
-        buttonText="Save new menu"
+        buttonText="Update menu"
         hasButton={true}
       />
       <form onSubmit={formik.handleSubmit}>
@@ -121,7 +134,7 @@ export default function Create() {
             <ImagePicker mediaUrl={mediaUrl} label="Thumbnail" />
           </div>
         </div>
-        <button ref={createMenuBtn} type="submit">
+        <button ref={updateMenuBtn} type="submit">
           Test
         </button>
       </form>

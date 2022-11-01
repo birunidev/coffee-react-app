@@ -4,9 +4,22 @@ import { RouteName } from "modules/Dashboard/infrastructure/routes/RouteName";
 import { RouteName as CashierRouteName } from "modules/Cashier/infrastructure/routes/routeName";
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getTransactions } from "store/slice/transactionSlice";
 
 export default function TransactionHistory() {
   const history = useHistory();
+  const dispatch = useDispatch();
+  const { transactions, transactionLoading } = useSelector(
+    (state) => state.transaction
+  );
+  console.log(transactions);
+
+  useEffect(() => {
+    dispatch(getTransactions());
+  }, [dispatch]);
+
   const buttonHandler = () => {
     history.push(CashierRouteName.TRANSACTION);
   };
@@ -44,63 +57,45 @@ export default function TransactionHistory() {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="w-[30px] pl-4 py-3">1</td>
-                <td>Muhammad Al Biruni</td>
-                <td>Caramel Machiato L 1x</td>
-                <td>20 March 2022</td>
-                <td>DONE</td>
-                <td>Rp. 59,000</td>
-                <td className="flex items-center ">
-                  <Link
-                    to={RouteName.TRANSACTION_DETAIL}
-                    className="py-3 px-7 bg-[#EFEFEF] rounded-full mt-2 inline-block"
-                  >
-                    Detail
-                  </Link>
-                  <button className="bg-primary-500 py-2 px-3 text-white rounded-xl ml-3">
-                    <PrinterIcon className="w-[25px]" />
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td className="w-[30px] pl-4 py-3">1</td>
-                <td>Muhammad Al Biruni</td>
-                <td>Caramel Machiato L 1x</td>
-                <td>20 March 2022</td>
-                <td>DONE</td>
-                <td>Rp. 59,000</td>
-                <td className="flex items-center ">
-                  <Link
-                    to={`${RouteName.TRANSACTION_DETAIL}/CP34341`}
-                    className="py-3 px-7 bg-[#EFEFEF] rounded-full mt-2 inline-block"
-                  >
-                    Detail
-                  </Link>
-                  <button className="bg-primary-500 py-2 px-3 text-white rounded-xl ml-3">
-                    <PrinterIcon className="w-[25px]" />
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td className="w-[30px] pl-4 py-3">1</td>
-                <td>Muhammad Al Biruni</td>
-                <td>Caramel Machiato L 1x</td>
-                <td>20 March 2022</td>
-                <td>DONE</td>
-                <td>Rp. 59,000</td>
-                <td className="flex items-center ">
-                  <Link
-                    to={RouteName.TRANSACTION_DETAIL}
-                    className="py-3 px-7 bg-[#EFEFEF] rounded-full mt-2 inline-block"
-                  >
-                    Detail
-                  </Link>
-                  <button className="bg-primary-500 py-2 px-3 text-white rounded-xl ml-3">
-                    <PrinterIcon className="w-[25px]" />
-                  </button>
-                </td>
-              </tr>
+              {transactions.length > 0 &&
+                transactions.map((transaction, index) => {
+                  return (
+                    <tr key={transaction.id}>
+                      <td className="w-[30px] pl-4 py-3">{index + 1}</td>
+                      <td>{transaction.customer_name}</td>
+                      <td>
+                        {transaction.ordered_menus.map((order) => {
+                          return (
+                            <p>
+                              {order.product.title_product} | {order.quantity}x
+                            </p>
+                          );
+                        })}
+                      </td>
+                      <td>{new Date(transaction.created_at).toDateString()}</td>
+                      <td>{transaction.status}</td>
+                      <td>
+                        Rp.{" "}
+                        {new Intl.NumberFormat("id-ID").format(
+                          transaction.total_price
+                        )}
+                      </td>
+                      <td className="flex items-center ">
+                        <Link
+                          to={
+                            RouteName.TRANSACTIONS + `/${transaction.tx_number}`
+                          }
+                          className="py-3 px-7 bg-[#EFEFEF] rounded-full mt-2 inline-block"
+                        >
+                          Detail
+                        </Link>
+                        <button className="bg-primary-500 py-2 px-3 text-white rounded-xl ml-3">
+                          <PrinterIcon className="w-[25px]" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </div>

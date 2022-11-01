@@ -12,7 +12,7 @@ export default function MediaCard({
   const [showDelete, setShowDelete] = useState(false);
   return (
     <div
-      className="media-card  relative max-w-[300px]"
+      className="media-card  relative max-w-[300px] cursor-pointer"
       onMouseEnter={() => setShowDelete(true)}
       onMouseLeave={() => setShowDelete(false)}
     >

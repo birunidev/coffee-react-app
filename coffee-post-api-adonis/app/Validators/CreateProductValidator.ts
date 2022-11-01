@@ -36,8 +36,9 @@ export default class CreateProductValidator {
       rules.maxLength(50),
       rules.unique({ table: "products", column: "slug" }),
     ]),
-    thumbnail: schema.string([rules.url()]),
+    thumbnail: schema.string(),
     price: schema.number(),
+    sale_price: schema.number(),
     category_id: schema.number(),
   });
 

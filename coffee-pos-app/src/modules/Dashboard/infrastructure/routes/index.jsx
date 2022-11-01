@@ -8,6 +8,8 @@ import {
   TransactionHistory,
   Employees,
   CreateEmployee,
+  EditMenu,
+  EditEmployee,
 } from "modules/Dashboard/screens";
 import React from "react";
 import { Switch, Route } from "react-router-dom";
@@ -24,6 +26,7 @@ export default function DashboardRoutes() {
         path={RouteName.ADD_NEW_MENU}
         component={CreateMenu}
       />
+      <ProtectedRoute exact path={RouteName.EDIT_MENU} component={EditMenu} />
       <ProtectedRoute exact path={RouteName.MEDIA} component={Media} />
       <ProtectedRoute
         exact
@@ -40,6 +43,11 @@ export default function DashboardRoutes() {
         exact
         path={RouteName.ADD_NEW_EMPLOYEE}
         component={CreateEmployee}
+      />
+      <ProtectedRoute
+        exact
+        path={RouteName.EDIT_EMPLOYEE}
+        component={EditEmployee}
       />
     </Switch>
   );

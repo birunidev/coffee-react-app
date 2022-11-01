@@ -34,10 +34,13 @@ Route.group(() => {
   Route.post("/refresh", "AuthController.refresh");
 }).prefix("/auth");
 
-Route.resource("users", "UsersController");
-Route.resource("products", "ProductsController");
-Route.resource("categories", "CategoriesController");
-Route.resource("media", "MediaController");
+Route.group(() => {
+  Route.resource("users", "UsersController");
+  Route.resource("products", "ProductsController");
+  Route.resource("categories", "CategoriesController");
+  Route.resource("media", "MediaController");
+}).middleware("jwtAuth");
 Route.get("/media/download/:filename", "MediaController.download");
 
+Route.get("transactions/:tx_number", "TransactionsController.showByTxNumber");
 Route.resource("transactions", "TransactionsController");

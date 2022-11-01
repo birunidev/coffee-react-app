@@ -51,8 +51,10 @@ export default class UsersController {
       const hashedPassword = await Hash.make(payload.password);
       const user = await User.create({
         ...payload,
-        role: "USER",
+        role: request.all().role,
         password: hashedPassword,
+        profile_picture: request.all().profile_picture,
+        phone_number: request.all().phone_number,
       });
 
       response.json({

@@ -86,5 +86,5 @@ const mediaSlice = createSlice({
     },
   },
 });
-export const { setLoadig } = mediaSlice.actions;
+export const { setLoading } = mediaSlice.actions;
 export default mediaSlice.reducer;

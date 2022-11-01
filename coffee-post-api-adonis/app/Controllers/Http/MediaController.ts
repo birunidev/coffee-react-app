@@ -20,6 +20,7 @@ export default class MediaController {
           media_url: `${process.env.API_URL}/media/download/${media.filename}`,
           size: media.size,
           type: media.type,
+          created_at: media.createdAt,
         };
       });
 

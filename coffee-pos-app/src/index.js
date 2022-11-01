@@ -8,6 +8,11 @@ import { store } from "store";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { QueryClientProvider, QueryClient } from "react-query";
+import { injectStore } from "lib/Api/Client";
+import { injectStoreForError } from "lib/Api/ErrorHandler";
+
+injectStore(store);
+injectStoreForError(store);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

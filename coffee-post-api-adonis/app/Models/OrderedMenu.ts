@@ -24,6 +24,9 @@ export default class OrderedMenu extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime;
 
+  public product_data: Object;
+  public product_id: Number;
+
   @belongsTo(() => Product)
   public product: BelongsTo<typeof Product>;
 }

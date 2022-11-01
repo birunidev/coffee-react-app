@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import authAPI from "modules/Auth/infrastructure/api";
 import { LoginSchema } from "modules/Auth/infrastructure/schemas";
 import React from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -25,7 +26,7 @@ export default function Login() {
         console.log(res);
         dispatch(setAuth({ accessToken: res.access_token }));
         toast.success("Authorized");
-        history.push("/auth/onboarding");
+        history.push("/cp-admin");
       } catch (error) {
         console.log(error);
       }

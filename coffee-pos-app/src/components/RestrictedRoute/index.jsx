@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory, Route } from "react-router-dom";
 
-export default function ProtectedRoute({
+export default function RestrictedRoute({
   component: Component,
   path,
   exact,
@@ -18,7 +18,7 @@ export default function ProtectedRoute({
 
   useEffect(() => {
     if (auth.accessToken) {
-      history.replace(RouteName.DASHBOARD);
+      // history.replace(RouteName.DASHBOARD);
     }
 
     setLoading(false);
@@ -30,7 +30,11 @@ export default function ProtectedRoute({
       exact={exact}
       {...resfOfprops}
       render={(props) =>
-        loading ? <Onboarding /> : !auth.accessToken && <Component {...props} />
+        loading ? (
+          <Onboarding targetPath={path} />
+        ) : (
+          !auth.accessToken && <Component {...props} />
+        )
       }
     />
   );

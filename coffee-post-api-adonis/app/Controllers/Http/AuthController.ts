@@ -14,6 +14,7 @@ export default class AuthController {
       if (!user) {
         throw Error("User with this email is not exist");
       }
+
       const isVerified = await Hash.verify(user.password, payload.password);
       if (!isVerified) {
         throw Error("Wrong Password! Try another");
@@ -29,6 +30,7 @@ export default class AuthController {
         access_token: jwt.accessToken,
       });
     } catch (error) {
+      console.log(error);
       response.badRequest({
         ...error,
         message: error.message,

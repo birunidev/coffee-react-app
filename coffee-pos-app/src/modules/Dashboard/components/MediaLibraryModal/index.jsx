@@ -4,16 +4,18 @@ import { CloudUploadIcon } from "@heroicons/react/outline";
 import MediaCard from "../MediaCard";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { createMedia } from "store/slice/mediaSlice";
+import { createMedia, getMedia } from "store/slice/mediaSlice";
 import Empty from "modules/Dashboard/screens/Media/Empty";
 import Spinner from "components/Spinner";
+import { useEffect } from "react";
+import dayjs from "dayjs";
 
-export default function MediaLibraryModal() {
+export default function MediaLibraryModal({ setMediaUrl }) {
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const uploadRef = useRef();
   const [menu, setMenu] = useState("from-computer");
-  const [selectedMedia, setSelectedMedia] = useState(0);
+  const [selectedMedia, setSelectedMedia] = useState(null);
   const { medias, loading } = useSelector((state) => state.media);
 
   const handleUpload = (e) => {
@@ -22,8 +24,18 @@ export default function MediaLibraryModal() {
     formData.append("media", fileToUpload);
     dispatch(createMedia({ formData, toast }));
     setMenu("media-library");
-    setSelectedMedia(medias.length);
+    setSelectedMedia(medias[medias.length - 1]);
   };
+
+  useEffect(() => {
+    dispatch(getMedia());
+    setSelectedMedia(medias[medias.length - 1]);
+  }, [dispatch]);
+
+  function handleChooseMedia() {
+    setMediaUrl(selectedMedia.media_url);
+    setShowModal(false);
+  }
 
   return (
     <>
@@ -108,10 +120,12 @@ export default function MediaLibraryModal() {
                       return (
                         <div
                           className={[
-                            "clickable-media border-2 ",
-                            selectedMedia == index && "border-primary-500",
+                            "clickable-media border-2  h-[308px]",
+                            selectedMedia &&
+                              selectedMedia.id == media.id &&
+                              "border-primary-500",
                           ].join(" ")}
-                          onClick={() => setSelectedMedia(index)}
+                          onClick={() => setSelectedMedia(media)}
                         >
                           <MediaCard
                             hasDelete={false}
@@ -125,47 +139,58 @@ export default function MediaLibraryModal() {
                       );
                     })}
                 </div>
-                <div className="media-detail border-l-2 border-gray-300 w-1/5 px-4  relative">
-                  <img
-                    src="/assets/media-1.jpg"
-                    className="w-full mb-5 block"
-                    alt=""
-                  />
-                  <div className="media-info">
-                    <div className="flex justify-between text-black mb-3">
-                      <p className="font-semibold">Filename </p>
-                      <p>Coffee-stuff.jpg</p>
+                {selectedMedia && (
+                  <div className="media-detail border-l-2 border-gray-300 w-1/5 px-4  relative">
+                    <div className="w-full h-[200px] flex items-center justify-center">
+                      <img
+                        src={`${selectedMedia.media_url}`}
+                        className="w-full mb-5 block"
+                        alt=""
+                      />
                     </div>
-                    <div className="flex justify-between text-black mb-3">
-                      <p className="font-semibold">Size </p>
-                      <p>200 KB</p>
+                    <div className="media-info mt-5">
+                      <div className="flex justify-between text-black mb-3">
+                        <p className="font-semibold mr-3">Filename </p>
+                        <p>
+                          {selectedMedia.filename.length > 20
+                            ? selectedMedia.filename.substr(0, 20) + " ..."
+                            : selectedMedia.filename}
+                        </p>
+                      </div>
+                      <div className="flex justify-between text-black mb-3">
+                        <p className="font-semibold">Size </p>
+                        <p>{selectedMedia.size} KB</p>
+                      </div>
+                      <div className="flex justify-between text-black mb-3">
+                        <p className="font-semibold">Resolution </p>
+                        <p>1200x820</p>
+                      </div>
+                      <div className="flex justify-between text-black mb-3">
+                        <p className="font-semibold">Type </p>
+                        <p>{selectedMedia.type}</p>
+                      </div>
+                      <div className="flex justify-between text-black mb-3">
+                        <p className="font-semibold">Uploaded at </p>
+                        <p>
+                          {dayjs(selectedMedia.created_at).format("D MMM YYYY")}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex justify-between text-black mb-3">
-                      <p className="font-semibold">Resolution </p>
-                      <p>1200x820</p>
-                    </div>
-                    <div className="flex justify-between text-black mb-3">
-                      <p className="font-semibold">Type </p>
-                      <p>Image/Jpeg</p>
-                    </div>
-                    <div className="flex justify-between text-black mb-3">
-                      <p className="font-semibold">Uplaoded at </p>
-                      <p>June 2, 2022</p>
+                    <div className="btn-actions absolute bottom-0 w-full left-0 px-4">
+                      <Button
+                        color="success"
+                        size="lg"
+                        style={{ width: "100%", fontWeight: "bold" }}
+                        onClick={handleChooseMedia}
+                      >
+                        Choose this media
+                      </Button>
+                      <button className="text-[#DA0A0A] mt-3">
+                        Remove Permanently
+                      </button>
                     </div>
                   </div>
-                  <div className="btn-actions absolute bottom-0 w-full left-0 px-4">
-                    <Button
-                      color="success"
-                      size="lg"
-                      style={{ width: "100%", fontWeight: "bold" }}
-                    >
-                      Choose this media
-                    </Button>
-                    <button className="text-[#DA0A0A] mt-3">
-                      Remove Permanently
-                    </button>
-                  </div>
-                </div>
+                )}
               </div>
             )}
           </div>

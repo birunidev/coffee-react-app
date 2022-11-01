@@ -10,6 +10,7 @@ export default class JwtAuth {
       await auth.use("jwt").authenticate();
       await next();
     } catch (error) {
+      console.log(error);
       response.unauthorized({
         success: false,
         statusCode: 401,

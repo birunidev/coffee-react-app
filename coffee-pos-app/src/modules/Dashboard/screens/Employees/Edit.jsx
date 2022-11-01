@@ -1,32 +1,47 @@
 import { Gap, ImagePicker, InputField, Select } from "components";
 import { useFormik } from "formik";
 import { DashboardLayout, PageTitle } from "modules/Dashboard/components";
-import { CreateEmployee } from "modules/Dashboard/infrastructure/schemes";
+import { userAPI } from "modules/Dashboard/infrastructure/api";
+import {
+  CreateEmployee,
+  EditEmployee,
+} from "modules/Dashboard/infrastructure/schemes";
 import React from "react";
+import { useEffect } from "react";
 import { useRef } from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { createUser } from "store/slice/userSlice";
+import { updateUser } from "store/slice/userSlice";
 
-export default function Create() {
+export default function Edit() {
   const dispatch = useDispatch();
+  const { id } = useParams();
+  const [user, setUser] = useState(null);
   const [mediaUrl, setMediaUrl] = useState("");
+  const updateEmployeeBtn = useRef(null);
 
-  const createEmployeeBtn = useRef(null);
-
+  useEffect(() => {
+    userAPI.getSingle(id).then((res) => {
+      setUser(res.data);
+      setMediaUrl(res.data.profile_picture);
+    });
+  }, []);
+  console.log(user);
   const formik = useFormik({
     initialValues: {
-      name: "",
-      email: "",
-      username: "",
-      phone_number: "",
+      name: user?.name ?? "",
+      email: user?.email ?? "",
+      username: user?.username ?? "",
+      phone_number: user?.phone_number ?? "",
+      role: user?.role ?? "",
       password: "",
-      role: "",
     },
     onSubmit: (values) => {
       dispatch(
-        createUser({
+        updateUser({
+          id,
           formData: {
             ...values,
             profile_picture: mediaUrl,
@@ -35,17 +50,18 @@ export default function Create() {
         })
       );
     },
-    validationSchema: CreateEmployee,
+    validationSchema: EditEmployee,
+    enableReinitialize: true,
   });
 
   const buttonHandler = () => {
-    createEmployeeBtn.current.click();
+    updateEmployeeBtn.current.click();
   };
   return (
     <DashboardLayout setMediaUrl={setMediaUrl} activePage="Employees">
       <PageTitle
         buttonHandler={buttonHandler}
-        buttonText="Save new employee"
+        buttonText="Update employee"
         hasButton={true}
       />
       <form onSubmit={formik.handleSubmit}>
@@ -79,6 +95,15 @@ export default function Create() {
             />
             <Gap height={20} />
             <InputField
+              label="Password"
+              name="password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              error={formik.errors.password}
+              onBlur={formik.handleBlur}
+            />
+            <Gap height={20} />
+            <InputField
               label="Phone Number"
               type="number"
               name="phone_number"
@@ -88,15 +113,6 @@ export default function Create() {
               onBlur={formik.handleBlur}
             />
             <Gap height={20} />
-            <InputField
-              label="Password"
-              type="password"
-              name="password"
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              error={formik.errors.password}
-              onBlur={formik.handleBlur}
-            />
           </div>
           <div className="lg:w-1/3">
             <Select
@@ -108,11 +124,11 @@ export default function Create() {
               options={[
                 {
                   title: "Admin",
-                  value: "ADMIN",
+                  id: "ADMIN",
                 },
                 {
                   title: "User",
-                  value: "USER",
+                  id: "USER",
                 },
               ]}
             />
@@ -120,7 +136,7 @@ export default function Create() {
             <ImagePicker mediaUrl={mediaUrl} label="Profile Picture" />
           </div>
         </div>
-        <button ref={createEmployeeBtn} type="submit">
+        <button ref={updateEmployeeBtn} type="submit">
           Test
         </button>
       </form>

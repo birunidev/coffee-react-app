@@ -3,15 +3,13 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-export default function Onboarding() {
+export default function Onboarding({ targetPath }) {
   const history = useHistory();
   const auth = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (auth.accessToken) {
-      if (!history.location.pathname.includes("/cp-admin")) {
-        history.replace(RouteName.DASHBOARD);
-      }
+      history.replace(targetPath);
     }
   }, [auth.accessToken, history]);
 
